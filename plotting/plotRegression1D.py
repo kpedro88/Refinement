@@ -8,22 +8,24 @@ from array import array
 
 normalize = True
 
-training_id = '20231105_1'
+training_id = '20221127'
 
-fname = '/nfs/dust/cms/user/wolfmor/Refinement/TrainingOutput/output_refinement_regression_TRAININGID.root'
+fname = 'output_refinement_regression_TRAININGID.root'
 fin = ROOT.TFile(fname.replace('TRAININGID', training_id))
 tree = fin.Get('tJet')
 
-nameout = 'regression_1D_' + training_id + '_VARIABLE.png'
+nameout = 'regression_1D_' + training_id + '_VARIABLE.pdf'
 
+colors = ["#9c9ca1", "#e42536", "#5790fc", "#964a8b", "#f89c20", "#7a21dd", "#86c8dd"]
+colors = [ROOT.TColor.GetColor(c) for c in colors]
 
-# (name, suffix, label, color, fillstyle, linewidth, selection, legend option)
+# (name, suffix, label, color, fillstyle, linewidth, selection, legend option, linestyle)
 samples = [
-    ('full', 'FullSim', 'FullSim', ROOT.kGreen+2, 3004, 3, '1&&', 'lf'),
-    ('fast', 'FastSim', 'FastSim', ROOT.kRed+1, 0, 3, '1&&', 'l'),
-    # ('refined', 'Refined', 'FastSim Refined', ROOT.kAzure+2, 0, 3, '1&&', 'l'),
-    ('refined', 'Refined', 'FastSim Refined', ROOT.kAzure+2, 0, 3, 'isTrainValTest<2&&', 'l'),
-    ('refinedtest', 'Refined', 'FastSim Refined (Test)', ROOT.kAzure+1, 0, 3, 'isTrainValTest>1&&', 'lp'),
+    ('full', 'FullSim', 'FullSim', colors[0], 1001, 1, '1&&', 'lf', 1),
+    ('fast', 'FastSim', 'FastSim', colors[1], 0, 1, '1&&', 'l', 1),
+    # ('refined', 'Refined', 'FastSim Refined', colors[2], 0, 2, '1&&', 'l'),
+    ('refined', 'Refined', 'FastSim Refined', colors[2], 0, 1, 'isTrainValTest<2&&', 'l', 1),
+    # ('refinedtest', 'Refined', 'FastSim Refined (Test)', ROOT.kAzure+1, 0, 3, 'isTrainValTest>1&&', 'lp'),
 ]
 
 # (name, branch name, (nbins, xlow, xhigh), title, ratio plot range, selection)
@@ -72,6 +74,7 @@ for v in variables:
         histos[v[0] + s[0]].SetFillStyle(s[4])
         histos[v[0] + s[0]].SetFillColor(s[3])
         histos[v[0] + s[0]].SetLineWidth(s[5])
+        histos[v[0] + s[0]].SetLineStyle(s[8])
         if 'test' not in s[0] and 'val' not in s[0]: histos[v[0] + s[0]].SetMarkerSize(0)
         histos[v[0] + s[0]].SetLineColor(s[3])
         histos[v[0] + s[0]].SetMarkerColor(s[3])
@@ -88,6 +91,7 @@ for v in variables:
         ratios[v[0] + s[0]].SetFillStyle(s[4])
         ratios[v[0] + s[0]].SetFillColor(s[3])
         ratios[v[0] + s[0]].SetLineWidth(s[5])
+        ratios[v[0] + s[0]].SetLineStyle(s[8])
         ratios[v[0] + s[0]].SetMarkerSize(0)
         ratios[v[0] + s[0]].SetLineColor(s[3])
         ratios[v[0] + s[0]].SetMarkerColor(s[3])
